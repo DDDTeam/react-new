@@ -16,9 +16,9 @@
     "typescript"
   ],
   "author": "DDD Team",
-  "main": "dist/ddd-react.mjs",
-  "types": "dist/ddd-react.d.ts",
-  "module": "dist/ddd-react.mjs",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.mjs",
   "license": "ISC",
   "description": "The minimalistic React-like library made by DDD team v2",
   "devDependencies": {

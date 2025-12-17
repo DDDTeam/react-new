@@ -8,7 +8,7 @@ const baseViteConfig = defineConfig((_) => {
         entry: "src/index.ts",
         name: "DDD React",
         formats: ["es"],
-        fileName: "ddd-react",
+        fileName: "index",
       },
       outDir: "dist",
       emptyOutDir: true,
