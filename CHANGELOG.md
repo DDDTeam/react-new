@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/DDDTeam/react-new/compare/v1.0.0...v1.1.0) (2025-12-17)
+
+
+### Features
+
+* update ([9c5d43d](https://github.com/DDDTeam/react-new/commit/9c5d43d1470b3c5c9343efc84fe22c7a9b12420e))
+
 # 1.0.0 (2025-12-17)
 
 
