@@ -19,6 +19,18 @@
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "module": "dist/index.mjs",
+  "exports": {
+    "./jsx-runtime": {
+      "import": "./dist/jsx/jsx-runtime.js",
+      "require": "./dist/jsx/jsx-runtime.js",
+      "types": "./dist/jsx/jsx-runtime.d.ts"
+    },
+    "./jsx-dev-runtime": {
+      "import": "./dist/jsx/jsx-dev-runtime.js",
+      "require": "./dist/jsx/jsx-dev-runtime.js",
+      "types": "./dist/jsx/jsx-dev-runtime.d.ts"
+    }
+  },
   "license": "ISC",
   "description": "The minimalistic React-like library made by DDD team v2",
   "devDependencies": {
