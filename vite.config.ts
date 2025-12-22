@@ -12,19 +12,11 @@ const baseViteConfig = defineConfig((_) => {
         },
         name: "DDD React",
         formats: ["es"],
-        fileName: (format, entryName) => `${entryName}.js`
       },
       outDir: "dist",
       emptyOutDir: true,
       sourcemap: false,
       cssCodeSplit: false,
-      rollupOptions: {
-        external: [], // добавьте внешние зависимости если есть
-        output: {
-          preserveModules: false,
-          exports: "named"
-        }
-      }
     },
   };
 });
