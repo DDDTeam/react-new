@@ -6,8 +6,6 @@ import {createRef} from './ref';
 import type {Ref} from './ref';
 import type {ComponentType} from './types/types';
 import {createPortal} from './portal';
-import {jsx} from "./jsx/jsx-runtime"
-import {jsxDEV} from "./jsx/jsx-dev-runtime"
 
 export type {ComponentType, Ref};
-export {Component, createContext, createRef, h, hFragment, hString, render, createPortal, jsx, jsxDEV};
+export {Component, createContext, createRef, h, hFragment, hString, render, createPortal};
