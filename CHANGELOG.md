@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/DDDTeam/react-new/compare/v1.3.2...v1.3.3) (2025-12-22)
+
+
+### Bug Fixes
+
+* jsx import ([b806ebd](https://github.com/DDDTeam/react-new/commit/b806ebd5f121df0b1936d904c75a8523b2537f7c))
+
 ## [1.3.2](https://github.com/DDDTeam/react-new/compare/v1.3.1...v1.3.2) (2025-12-22)
 
 
