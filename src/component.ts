@@ -50,7 +50,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
       if ((consumer as any).isMounted) {
         const changed = consumer.updateContext();
         if (changed) {
-          consumer.patch();
+          consumer.patch(consumer.props, consumer.state);
         }
       }
     });
@@ -64,7 +64,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     return Promise.resolve();
   }
 
-  onUpdate(): void | Promise<void> {
+  onUpdate(prevProps:P, prevState:S): void | Promise<void> {
     return Promise.resolve();
   }
 
@@ -117,10 +117,12 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
       this.notify();
     }
 
-    this.patch();
+    this.patch(oldProps, this.state);
   }
 
   setState(state: Partial<S> | ((prevState: S, props: P) => Partial<S>)): void {
+    let oldState = this.state
+
     if (typeof state === 'function') {
       this.state = {
         ...this.state,
@@ -129,7 +131,8 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     } else {
       this.state = {...this.state, ...state};
     }
-    this.patch();
+
+    this.patch(this.props, oldState);
   }
 
   mount(hostEl: HTMLElement, index: number | null = null): void {
@@ -172,14 +175,14 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     this.isMounted = false;
   }
 
-  private patch(): void {
+  private patch(prevProps:P, prevState:S): void {
     if (!this.isMounted || !this.hostEl || !this.vdom) {
       return;
     }
 
     const vdom = this.render();
     this.vdom = patchDOM(this.vdom, vdom, this.hostEl, this as Component);
-    enqueueJob(() => this.onUpdate());
+    enqueueJob(() => this.onUpdate(prevProps, prevState));
   }
 
   private updateContext() {
