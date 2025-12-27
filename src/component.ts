@@ -189,14 +189,20 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     const context = Object.getPrototypeOf(this).constructor
         .contextType as Context<ContextValueType>;
 
+    let curVNode: Component | null | undefined = this.parent;
     if (context != null) {
-      if (this.subscribedProvider) {
-        console.log("this.subscribedProvider", this.subscribedProvider)
-        this.context = this.subscribedProvider.props.value as ContextValueType
-        return true;
+      while (curVNode) {
+        if (Object.getPrototypeOf(curVNode).constructor === context.Provider) {
+          this.context = (curVNode as any).props.value as ContextValueType;
+          return true;
+        }
+
+        curVNode = curVNode.parent;
       }
 
-      this.context = context.defaultValue;
+      if (curVNode == null) {
+        this.context = context.defaultValue;
+      }
     }
 
     return false;
