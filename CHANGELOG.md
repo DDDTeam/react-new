@@ -1,3 +1,10 @@
+## [1.3.11](https://github.com/DDDTeam/react-new/compare/v1.3.10...v1.3.11) (2025-12-27)
+
+
+### Bug Fixes
+
+* debug ([b5e20aa](https://github.com/DDDTeam/react-new/commit/b5e20aacb54c98ff4246ee61d6f372e2eb5d2b26))
+
 ## [1.3.10](https://github.com/DDDTeam/react-new/compare/v1.3.9...v1.3.10) (2025-12-27)
 
 
