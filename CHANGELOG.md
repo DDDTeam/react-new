@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/DDDTeam/react-new/compare/v1.3.11...v1.4.0) (2025-12-27)
+
+
+### Features
+
+* clean ([d4a72c1](https://github.com/DDDTeam/react-new/commit/d4a72c1b942da5396659fbad5639ca087d780533))
+
 ## [1.3.11](https://github.com/DDDTeam/react-new/compare/v1.3.10...v1.3.11) (2025-12-27)
 
 
