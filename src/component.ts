@@ -46,16 +46,10 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   }
 
   notify() {
-    console.log("notify")
-    console.log("this.dependencies", this.dependencies);
     this.dependencies.forEach(({consumer}) => {
-      console.log("consumer", consumer);
-      console.log("consumer.isMounted", consumer.isMounted);
       if ((consumer as any).isMounted) {
         const changed = consumer.updateContext();
-        console.log("changed", changed);
         if (changed) {
-          console.log("consumer.patch");
           consumer.patch();
         }
       }
@@ -109,21 +103,16 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   }
 
   updateProps(props: Partial<P>): void {
-    console.log("updateProps", this);
     const newProps = {...this.props, ...props};
     const oldProps = this.props;
 
     this.props = newProps;
 
     let isContextUpdated = this.updateContext();
-    console.log("isEqual(oldProps, newProps)", isEqual(oldProps, newProps));
-    console.log("isContextUpdated", isContextUpdated);
     if (isEqual(oldProps, newProps) && !isContextUpdated) {
-      console.log("return");
       return;
     }
 
-    console.log("isProvider(this as Component)", isProvider(this as Component));
     if (isProvider(this as Component)) {
       this.notify();
     }
@@ -147,10 +136,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     if (this.isMounted) {
       throw new Error('Component is already mounted');
     }
-    console.log("this", this);
-    console.log("isConsumer(this as Component)", isConsumer(this as Component))
     if (isConsumer(this as Component) && !this.subscribedProvider) {
-      console.log(" this.subscribeToProvider()")
       this.subscribeToProvider();
     }
     this.updateContext();
@@ -197,20 +183,14 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   }
 
   private updateContext() {
-    console.log("updateContext");
     const context = Object.getPrototypeOf(this).constructor
         .contextType as Context<ContextValueType>;
-    console.log("context", context);
 
     let curVNode: Component | null | undefined = this.parent;
     if (context != null) {
-      console.log(1)
       while (curVNode) {
-        console.log(2)
         if (Object.getPrototypeOf(curVNode).constructor === context.Provider) {
           this.context = (curVNode as any).props.value as ContextValueType;
-          console.log("this.context", this.context)
-          console.log(3)
           return true;
         }
 
@@ -218,11 +198,9 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
       }
 
       if (curVNode == null) {
-        console.log(4)
         this.context = context.defaultValue;
       }
     }
-    console.log(5)
 
     return false;
   }
