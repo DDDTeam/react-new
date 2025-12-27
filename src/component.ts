@@ -189,8 +189,9 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     const context = Object.getPrototypeOf(this).constructor
         .contextType as Context<ContextValueType>;
 
-    if (context !== null) {
+    if (context != null) {
       if (this.subscribedProvider) {
+        console.log("this.subscribedProvider", this.subscribedProvider)
         this.context = this.subscribedProvider.props.value as ContextValueType
         return true;
       }
