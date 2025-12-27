@@ -191,7 +191,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
     if (context !== null) {
       if (this.subscribedProvider) {
-        this.context = this.subscribedProvider.props.value
+        this.context = this.subscribedProvider.props.value as ContextValueType
         return true;
       }
 
