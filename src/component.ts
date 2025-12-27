@@ -106,7 +106,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   }
 
   updateProps(props: Partial<P>): void {
-    console.log("updateProps");
+    console.log("updateProps", this);
     const newProps = {...this.props, ...props};
     const oldProps = this.props;
 
@@ -191,14 +191,20 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   }
 
   private updateContext() {
+    console.log("updateContext");
     const context = Object.getPrototypeOf(this).constructor
       .contextType as Context<ContextValueType>;
+    console.log("context", context);
 
     let curVNode: Component | null | undefined = this.parent;
     if (context != null) {
+      console.log(1)
       while (curVNode) {
+        console.log(2)
         if (Object.getPrototypeOf(curVNode).constructor === context.Provider) {
           this.context = (curVNode as any).props.value as ContextValueType;
+          console.log("this.context", this.context)
+          console.log(3)
           return true;
         }
 
@@ -206,9 +212,11 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
       }
 
       if (curVNode == null) {
+        console.log(4)
         this.context = context.defaultValue;
       }
     }
+    console.log(5)
 
     return false;
   }
