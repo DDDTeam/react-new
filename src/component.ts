@@ -120,8 +120,9 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
       return;
     }
 
-    console.log("isProvider(this as Component)", isProvider(this as Component));
-    if (isProvider(this as Component)) {
+    console.log("this.parent", this.parent)
+    console.log("isProvider(this.parent as Component)", isProvider(this.parent as Component));
+    if (isProvider(this.parent as Component)) {
       this.notify();
     }
 
