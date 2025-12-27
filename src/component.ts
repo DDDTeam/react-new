@@ -22,6 +22,9 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   public dependencies: {consumer: Component}[] = [];
   public subscribedProvider: Component | null = null;
 
+  protected isProvider = false
+  protected isConsumer = false
+
   constructor(props = {} as P, parentComponent: Component | null) {
     this.props = props as P & WithChildrenProps;
     this.parent = parentComponent;
@@ -145,7 +148,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     if (this.isMounted) {
       throw new Error('Component is already mounted');
     }
-    console.log("this.parent", this.parent);
+    console.log("this", this);
     console.log("isConsumer(this as Component)", isConsumer(this as Component))
     if (isConsumer(this as Component) && !this.subscribedProvider) {
       console.log(" this.subscribeToProvider()")
@@ -197,7 +200,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   private updateContext() {
     console.log("updateContext");
     const context = Object.getPrototypeOf(this).constructor
-      .contextType as Context<ContextValueType>;
+        .contextType as Context<ContextValueType>;
     console.log("context", context);
 
     let curVNode: Component | null | undefined = this.parent;
@@ -227,7 +230,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   private subscribeToProvider(): void {
     const context = Object.getPrototypeOf(this).constructor
-      .contextType as Context<ContextValueType>;
+        .contextType as Context<ContextValueType>;
 
     if (!context) {
       return;

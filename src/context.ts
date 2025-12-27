@@ -9,6 +9,8 @@ export function createContext<T>(defaultValue: T): Context<T> {
 	}
 
 	class Provider extends Component<ProviderProps> {
+		isProvider = true
+
 		render(): VDOMNode {
 			let children: VDOMNode[] = [];
 
@@ -29,6 +31,8 @@ export function createContext<T>(defaultValue: T): Context<T> {
 			Provider,
 			defaultValue,
 		};
+
+		isConsumer = true
 
 		render(): VDOMNode {
 			let children = this.props.children;
