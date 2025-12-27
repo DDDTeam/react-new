@@ -145,7 +145,10 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     if (this.isMounted) {
       throw new Error('Component is already mounted');
     }
+    console.log("this.parent", this.parent);
+    console.log("isConsumer(this as Component)", isConsumer(this as Component))
     if (isConsumer(this as Component) && !this.subscribedProvider) {
+      console.log(" this.subscribeToProvider()")
       this.subscribeToProvider();
     }
     this.updateContext();
