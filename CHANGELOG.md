@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/DDDTeam/react-new/compare/v1.4.0...v1.5.0) (2025-12-27)
+
+
+### Features
+
+* add prevProps and prevState to onUpdate ([8839682](https://github.com/DDDTeam/react-new/commit/883968284e7125681f68da273eff999a45bdc825))
+
 # [1.4.0](https://github.com/DDDTeam/react-new/compare/v1.3.11...v1.4.0) (2025-12-27)
 
 
