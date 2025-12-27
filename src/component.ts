@@ -9,7 +9,7 @@ import {DOM_TYPES} from './types';
 import {isConsumer, isProvider} from './utils/context';
 
 export abstract class Component<P = {}, S = ComponentState, ContextValueType = null> {
-  private isMounted = false;
+  public isMounted = false;
   public vdom: VDOMNode | null = null;
   private hostEl: HTMLElement | null = null;
   public parent: Component | null = null;
