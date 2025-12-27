@@ -43,10 +43,16 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   }
 
   notify() {
+    console.log("notify")
+    console.log("this.dependencies", this.dependencies);
     this.dependencies.forEach(({consumer}) => {
+      console.log("consumer", consumer);
+      console.log("consumer.isMounted", consumer.isMounted);
       if ((consumer as any).isMounted) {
         const changed = consumer.updateContext();
+        console.log("changed", changed);
         if (changed) {
+          console.log("consumer.patch");
           consumer.patch();
         }
       }
@@ -100,16 +106,21 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   }
 
   updateProps(props: Partial<P>): void {
+    console.log("updateProps");
     const newProps = {...this.props, ...props};
     const oldProps = this.props;
 
     this.props = newProps;
 
     let isContextUpdated = this.updateContext();
+    console.log("isEqual(oldProps, newProps)", isEqual(oldProps, newProps));
+    console.log("isContextUpdated", isContextUpdated);
     if (isEqual(oldProps, newProps) && !isContextUpdated) {
+      console.log("return");
       return;
     }
 
+    console.log("isProvider(this as Component)", isProvider(this as Component));
     if (isProvider(this as Component)) {
       this.notify();
     }
