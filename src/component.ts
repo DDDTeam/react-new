@@ -22,8 +22,8 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   public dependencies: {consumer: Component}[] = [];
   public subscribedProvider: Component | null = null;
 
-  protected isProvider = false
-  protected isConsumer = false
+  public isProvider = false
+  public isConsumer = false
 
   constructor(props = {} as P, parentComponent: Component | null) {
     this.props = props as P & WithChildrenProps;
@@ -123,9 +123,8 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
       return;
     }
 
-    console.log("this.parent", this.parent)
     console.log("isProvider(this.parent as Component)", isProvider(this.parent as Component));
-    if (isProvider(this.parent as Component)) {
+    if (isProvider(this as Component)) {
       this.notify();
     }
 
