@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/DDDTeam/react-new/compare/v1.6.1...v1.6.2) (2025-12-27)
+
+
+### Bug Fixes
+
+* context api ([e6122b0](https://github.com/DDDTeam/react-new/commit/e6122b03cdbde78460d53264b6cd544b5481a399))
+
 ## [1.6.1](https://github.com/DDDTeam/react-new/compare/v1.6.0...v1.6.1) (2025-12-27)
 
 
