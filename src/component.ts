@@ -20,7 +20,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   public context: ContextValueType = null as ContextValueType;
 
   public dependencies: {consumer: Component}[] = [];
-  public subscribedProvider: Component<{value: any}> | null = null;
+  public subscribedProvider: Component<{value: ContextValueType}> | null = null;
 
   public isProvider = false
   public isConsumer = false
@@ -47,7 +47,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   notify() {
     this.dependencies.forEach(({consumer}) => {
-      if ((consumer as any).isMounted) {
+      if (consumer.isMounted) {
         const changed = consumer.updateContext();
         if (changed) {
           consumer.patch(consumer.props, consumer.state);
@@ -186,9 +186,16 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   }
 
   private updateContext() {
-    if (this.subscribedProvider) {
-      this.context = this.subscribedProvider.props.value
-      return true;
+    const context = Object.getPrototypeOf(this).constructor
+        .contextType as Context<ContextValueType>;
+
+    if (context !== null) {
+      if (this.subscribedProvider) {
+        this.context = this.subscribedProvider.props.value
+        return true;
+      }
+
+      this.context = context.defaultValue;
     }
 
     return false;
@@ -202,7 +209,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
       return;
     }
 
-    let curVNode: Component | null | undefined = this.parent;
+    let curVNode: Component | null = this.parent;
     while (curVNode) {
       if (Object.getPrototypeOf(curVNode).constructor === context.Provider) {
         curVNode.addDependency({consumer: this as Component});
