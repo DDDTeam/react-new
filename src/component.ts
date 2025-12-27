@@ -20,7 +20,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   public context: ContextValueType = null as ContextValueType;
 
   public dependencies: {consumer: Component}[] = [];
-  public subscribedProvider: Component | null = null;
+  public subscribedProvider: Component<{value: any}> | null = null;
 
   public isProvider = false
   public isConsumer = false
@@ -33,7 +33,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   addDependency({consumer}: {consumer: Component}) {
     if (!this.dependencies.some(d => d.consumer === consumer)) {
       this.dependencies.push({consumer});
-      consumer.subscribedProvider = this as Component;
+      consumer.subscribedProvider = this as Component<{value: any}> ;
     }
   }
 
@@ -186,23 +186,9 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   }
 
   private updateContext() {
-    const context = Object.getPrototypeOf(this).constructor
-        .contextType as Context<ContextValueType>;
-
-    let curVNode: Component | null | undefined = this.parent;
-    if (context != null) {
-      while (curVNode) {
-        if (Object.getPrototypeOf(curVNode).constructor === context.Provider) {
-          this.context = (curVNode as any).props.value as ContextValueType;
-          return true;
-        }
-
-        curVNode = curVNode.parent;
-      }
-
-      if (curVNode == null) {
-        this.context = context.defaultValue;
-      }
+    if (this.subscribedProvider) {
+      this.context = this.subscribedProvider.props.value
+      return true;
     }
 
     return false;
