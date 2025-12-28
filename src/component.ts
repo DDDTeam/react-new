@@ -4,11 +4,11 @@ import {extractChildren} from './h.js';
 import {mountDOM} from './mount-dom.js';
 import {patchDOM} from './patch-dom.js';
 import {enqueueJob} from './scheduler.js';
-import type {ComponentState, Context, VDOMNode, WithChildrenProps} from './types';
+import {ComponentState, Consumer, Context, Provider, VDOMNode, WithChildrenProps} from './types';
 import {DOM_TYPES} from './types';
 import {isConsumer, isProvider} from './utils/context';
 
-export abstract class Component<P = {}, S = ComponentState, ContextValueType = null> {
+export abstract class Component<P = {}, S = ComponentState, C = null> {
   public isMounted = false;
   public vdom: VDOMNode | null = null;
   private hostEl: HTMLElement | null = null;
@@ -17,10 +17,10 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   public props: P & WithChildrenProps;
   public state: S = {} as S;
 
-  public context: ContextValueType = null as ContextValueType;
+  public context: C = null as C;
 
-  public dependencies: {consumer: Component}[] = [];
-  public subscribedProvider: Component<{value: ContextValueType}> | null = null;
+  public dependencies: {consumer: Consumer<C>}[] = [];
+  public subscribedProvider: Provider<C> | null = null;
 
   public isProvider = false
   public isConsumer = false
@@ -30,14 +30,14 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     this.parent = parentComponent;
   }
 
-  addDependency({consumer}: {consumer: Component}) {
+  addDependency({consumer}: {consumer: Consumer<C>}) {
     if (!this.dependencies.some(d => d.consumer === consumer)) {
       this.dependencies.push({consumer});
-      consumer.subscribedProvider = this as Component<{value: any}> ;
+      consumer.subscribedProvider = this as Provider<C>;
     }
   }
 
-  removeDependency({consumer}: {consumer: Component}) {
+  removeDependency({consumer}: {consumer: Consumer<C>}) {
     const index = this.dependencies.findIndex(dep => dep.consumer === consumer);
     if (index !== -1) {
       this.dependencies.splice(index, 1);
@@ -187,13 +187,13 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   private updateContext() {
     const context = Object.getPrototypeOf(this).constructor
-        .contextType as Context<ContextValueType>;
+        .contextType as Context<C>;
 
-    let curVNode: Component | null | undefined = this.parent;
+    let curVNode: Component | null = this.parent;
     if (context != null) {
       while (curVNode) {
         if (Object.getPrototypeOf(curVNode).constructor === context.Provider) {
-          this.context = (curVNode as any).props.value as ContextValueType;
+          this.context = (curVNode as Provider<C>).props.value;
           return true;
         }
 
@@ -210,7 +210,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   private subscribeToProvider(): void {
     const context = Object.getPrototypeOf(this).constructor
-        .contextType as Context<ContextValueType>;
+        .contextType as Context<C>;
 
     if (!context) {
       return;

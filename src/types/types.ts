@@ -62,3 +62,6 @@ export type ComponentType<Props = any, ComponentState = any, Context = any> = ne
   props: Props,
   parentComponent: Component<{}, any, null> | null,
 ) => Component<Props, ComponentState, Context>;
+
+export type Consumer<T> = Component<{}, {}, T>
+export type Provider<T> = Component<{value: T}>
