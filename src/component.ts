@@ -1,10 +1,10 @@
 import {isEqual} from '@guanghechen/fast-deep-equal';
-import {destroyDOM} from './destroy-dom.js';
-import {extractChildren} from './h.js';
-import {mountDOM} from './mount-dom.js';
-import {patchDOM} from './patch-dom.js';
-import {enqueueJob} from './scheduler.js';
-import {ComponentState, Consumer, Context, Provider, VDOMNode, WithChildrenProps} from './types';
+import {destroyDOM} from './destroy-dom';
+import {extractChildren} from './h';
+import {mountDOM} from './mount-dom';
+import {patchDOM} from './patch-dom';
+import {enqueueJob} from './scheduler';
+import type {ComponentState, Consumer, Context, Provider, VDOMNode, WithChildrenProps} from './types';
 import {DOM_TYPES} from './types';
 import {isConsumer, isProvider} from './utils/context';
 
@@ -46,14 +46,16 @@ export abstract class Component<P = {}, S = ComponentState, C = null> {
   }
 
   notify() {
-    this.dependencies.forEach(({consumer}) => {
-      if (consumer.isMounted) {
-        const changed = consumer.updateContext();
-        if (changed) {
-          consumer.patch(consumer.props, consumer.state);
+    enqueueJob(() => {
+      this.dependencies.forEach(({consumer}) => {
+        if (consumer.isMounted) {
+          const changed = consumer.updateContext();
+          if (changed) {
+            consumer.patch(consumer.props, consumer.state);
+          }
         }
-      }
-    });
+      });
+    })
   }
 
   onMount(): void | Promise<void> {
@@ -108,7 +110,7 @@ export abstract class Component<P = {}, S = ComponentState, C = null> {
 
     this.props = newProps;
 
-    let isContextUpdated = this.updateContext();
+    const isContextUpdated = this.updateContext();
     if (isEqual(oldProps, newProps) && !isContextUpdated) {
       return;
     }
@@ -121,7 +123,7 @@ export abstract class Component<P = {}, S = ComponentState, C = null> {
   }
 
   setState(state: Partial<S> | ((prevState: S, props: P) => Partial<S>)): void {
-    let oldState = this.state
+    const oldState = this.state
 
     if (typeof state === 'function') {
       this.state = {

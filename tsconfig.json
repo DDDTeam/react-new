@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2019",
+    "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "node",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "jsx": "react",
     "declaration": true,
     "sourceMap": true,
@@ -11,6 +12,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
     "emitDeclarationOnly": false,
     "noEmit": true,
     "baseUrl": ".",

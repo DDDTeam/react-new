@@ -1,6 +1,7 @@
 import { Component } from './component';
 import { hFragment } from './h';
 import type { Context, VDOMNode } from './types';
+import {isEqual} from "@guanghechen/fast-deep-equal";
 
 export function createContext<T>(defaultValue: T): Context<T> {
 	interface ProviderProps {
