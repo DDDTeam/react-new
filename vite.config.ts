@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 
-const baseViteConfig = defineConfig((_) => {
+export default defineConfig((_) => {
   return {
     plugins: [],
     build: {
@@ -20,5 +20,3 @@ const baseViteConfig = defineConfig((_) => {
     },
   };
 });
-
-export default baseViteConfig;

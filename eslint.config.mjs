@@ -6,6 +6,7 @@ import tseslint from 'typescript-eslint';
 const Ignores = [
 	'node_modules/',
 	'dist/**',
+	'vite.config.ts'
 ];
 
 export default defineConfig([
@@ -28,7 +29,8 @@ export default defineConfig([
 		rules: {
 			'@typescript-eslint/no-explicit-any': 'off',
 			'@typescript-eslint/no-empty-object-type': 'off',
-			'@typescript-eslint/no-unused-vars': 'off'
+			'@typescript-eslint/no-unused-vars': 'off',
+			'@typescript-eslint/no-unsafe-function-type': 'off'
 		},
 		ignores: Ignores,
 	},
