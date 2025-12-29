@@ -6,7 +6,8 @@
     "type-check": "tsc --noEmit",
     "dev": "npm run type-check && rollup -c -w --serve",
     "build": "tsc && vite build && npm run build:types",
-    "build:types": "tsc -p tsconfig.build.json"
+    "build:types": "tsc -p tsconfig.build.json",
+    "lint": "npx eslint ."
   },
   "keywords": [
     "react",

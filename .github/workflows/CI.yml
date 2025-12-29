@@ -41,7 +41,7 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Run ESLint
         run: |
-          npx run eslint
+          npx run lint
       - name: Send Telegram Failure Message
         if: failure()
         uses: PacificPromise/macos-telegram-action@main
