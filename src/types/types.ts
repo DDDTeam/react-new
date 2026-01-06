@@ -50,10 +50,6 @@ export interface Context<T> {
   defaultValue: T;
 }
 
-export interface ComponentState {
-  [key: string]: unknown;
-}
-
 export interface WithChildrenProps {
   children?: VDOMNode[] | VDOMNode | string | Function;
 }

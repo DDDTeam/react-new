@@ -4,11 +4,11 @@ import {extractChildren} from './h';
 import {mountDOM} from './mount-dom';
 import {patchDOM} from './patch-dom';
 import {enqueueJob} from './scheduler';
-import type {ComponentState, Consumer, Context, Provider, VDOMNode, WithChildrenProps} from './types';
+import type {Consumer, Context, Provider, VDOMNode, WithChildrenProps} from './types';
 import {DOM_TYPES} from './types';
 import {isConsumer, isProvider} from './utils/context';
 
-export abstract class Component<P = {}, S = ComponentState, C = null> {
+export abstract class Component<P = {}, S = {}, C = null> {
   public isMounted = false;
   public vdom: VDOMNode | null = null;
   private hostEl: HTMLElement | null = null;
@@ -63,6 +63,10 @@ export abstract class Component<P = {}, S = ComponentState, C = null> {
   }
 
   onUnmount(): void | Promise<void> {
+    return Promise.resolve();
+  }
+
+  onWillUpdate(nextProps:P, nextState:S): void | Promise<void> {
     return Promise.resolve();
   }
 
@@ -182,6 +186,7 @@ export abstract class Component<P = {}, S = ComponentState, C = null> {
       return;
     }
 
+    enqueueJob(() => this.onWillUpdate(this.props, this.state));
     const vdom = this.render();
     this.vdom = patchDOM(this.vdom, vdom, this.hostEl, this as Component);
     enqueueJob(() => this.onUpdate(prevProps, prevState));
