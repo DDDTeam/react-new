@@ -58,7 +58,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
     })
   }
 
-  onMount(): void | Promise<void> {
+  didMount(): void | Promise<void> {
     return Promise.resolve();
   }
 

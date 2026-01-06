@@ -36,7 +36,7 @@ export function mountDOM(
       createComponentNode(vdom as ComponentVDOMNode, parentEl, index, hostComponent);
       const component = (vdom as ComponentVDOMNode).component;
       if (component) {
-        enqueueJob(() => component.onMount());
+        enqueueJob(() => component.didMount());
       }
       break;
     }
