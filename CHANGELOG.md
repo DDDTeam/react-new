@@ -1,3 +1,18 @@
+# [1.7.0](https://github.com/DDDTeam/react-new/compare/v1.6.4...v1.7.0) (2026-01-06)
+
+
+### Bug Fixes
+
+* CI ([3366e2c](https://github.com/DDDTeam/react-new/commit/3366e2c08a9371f79277cbeaea12503d17aa9fcf))
+* CI ([2f04883](https://github.com/DDDTeam/react-new/commit/2f0488334d40817aa6e4de6d58a9124354075a5f))
+
+
+### Features
+
+* add CI ([dfca247](https://github.com/DDDTeam/react-new/commit/dfca24702f734e3f6835018cc4174040ce300f58))
+* add eslint ([a7005fd](https://github.com/DDDTeam/react-new/commit/a7005fd9d05775a881a64b1860ab5581dec4f5c2))
+* add onWillUpdate ([4073f39](https://github.com/DDDTeam/react-new/commit/4073f39b57bd0d86d1dcc29ac6d6a0b88a81c810))
+
 ## [1.6.4](https://github.com/DDDTeam/react-new/compare/v1.6.3...v1.6.4) (2025-12-28)
 
 
