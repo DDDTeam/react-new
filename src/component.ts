@@ -62,7 +62,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
     return Promise.resolve();
   }
 
-  onWillUpdate(nextProps:P, nextState:S): void | Promise<void> {
+  willUpdate(nextProps:P, nextState:S): void | Promise<void> {
     return Promise.resolve();
   }
 
@@ -70,7 +70,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
     return Promise.resolve();
   }
 
-  onWillUnmount(): void | Promise<void> {
+  willUnmount(): void | Promise<void> {
     return Promise.resolve();
   }
 
@@ -161,7 +161,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
       return;
     }
 
-    enqueueJob(() => this.onWillUnmount());
+    enqueueJob(() => this.willUnmount());
     if (this.subscribedProvider) {
       this.subscribedProvider.removeDependency({consumer: this as Component});
     }
@@ -186,7 +186,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
       return;
     }
 
-    enqueueJob(() => this.onWillUpdate(this.props, this.state));
+    enqueueJob(() => this.willUpdate(this.props, this.state));
     const vdom = this.render();
     this.vdom = patchDOM(this.vdom, vdom, this.hostEl, this as Component);
     enqueueJob(() => this.didUpdate(prevProps, prevState));
