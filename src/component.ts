@@ -62,19 +62,19 @@ export abstract class Component<P = {}, S = {}, C = null> {
     return Promise.resolve();
   }
 
-  onUnmount(): void | Promise<void> {
-    return Promise.resolve();
-  }
-
   onWillUpdate(nextProps:P, nextState:S): void | Promise<void> {
     return Promise.resolve();
   }
 
-  onUpdate(prevProps:P, prevState:S): void | Promise<void> {
+  didUpdate(prevProps:P, prevState:S): void | Promise<void> {
     return Promise.resolve();
   }
 
   onWillUnmount(): void | Promise<void> {
+    return Promise.resolve();
+  }
+
+  didUnmount(): void | Promise<void> {
     return Promise.resolve();
   }
 
@@ -175,7 +175,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
       destroyDOM(this.vdom);
     }
 
-    enqueueJob(() => this.onUnmount());
+    enqueueJob(() => this.didUnmount());
     this.vdom = null;
     this.hostEl = null;
     this.isMounted = false;
@@ -189,7 +189,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
     enqueueJob(() => this.onWillUpdate(this.props, this.state));
     const vdom = this.render();
     this.vdom = patchDOM(this.vdom, vdom, this.hostEl, this as Component);
-    enqueueJob(() => this.onUpdate(prevProps, prevState));
+    enqueueJob(() => this.didUpdate(prevProps, prevState));
   }
 
   private updateContext() {
