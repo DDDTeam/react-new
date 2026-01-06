@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/DDDTeam/react-new/compare/v1.7.1...v1.7.2) (2026-01-06)
+
+
+### Bug Fixes
+
+* rename ([7088b56](https://github.com/DDDTeam/react-new/commit/7088b561db7077e71b5493969351d1e3df4e3fa1))
+
 ## [1.7.1](https://github.com/DDDTeam/react-new/compare/v1.7.0...v1.7.1) (2026-01-06)
 
 
