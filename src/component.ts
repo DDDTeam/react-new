@@ -14,6 +14,8 @@ export abstract class Component<P = {}, S = {}, C = null> {
   private hostEl: HTMLElement | null = null;
   public parent: Component | null = null;
 
+  static defaultProps: any = {}
+
   public props: P & WithChildrenProps;
   public state: S = {} as S;
 
@@ -26,7 +28,8 @@ export abstract class Component<P = {}, S = {}, C = null> {
   public isConsumer = false
 
   constructor(props = {} as P, parentComponent: Component | null) {
-    this.props = props as P & WithChildrenProps;
+    const defaultProps = this.getDefaultProps();
+    this.props = { ...defaultProps, ...props } as P & WithChildrenProps;
     this.parent = parentComponent;
   }
 
@@ -109,7 +112,8 @@ export abstract class Component<P = {}, S = {}, C = null> {
   }
 
   updateProps(props: Partial<P>): void {
-    const newProps = {...this.props, ...props};
+    const defaultProps = this.getDefaultProps();
+    const newProps = { ...defaultProps, ...this.props, ...props };
     const oldProps = this.props;
 
     this.props = newProps;
@@ -231,5 +235,9 @@ export abstract class Component<P = {}, S = {}, C = null> {
       }
       curVNode = curVNode.parent;
     }
+  }
+
+  getDefaultProps(): P {
+    return (this.constructor as typeof Component).defaultProps || {}
   }
 }
