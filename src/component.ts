@@ -81,8 +81,8 @@ export abstract class Component<P = {}, S = {}, C = null> {
     return Promise.resolve();
   }
 
-  shouldComponentUpdate(oldProps: P, nextProps: P): boolean {
-    return isEqual(oldProps, nextProps);
+  shouldComponentUpdate(prevProps: P, nextProps: P): boolean {
+    return isEqual(prevProps, nextProps);
   }
 
   abstract render(): VDOMNode;
