@@ -81,6 +81,10 @@ export abstract class Component<P = {}, S = {}, C = null> {
     return Promise.resolve();
   }
 
+  shouldComponentUpdate(oldProps: P, nextProps: P): boolean {
+    return isEqual(oldProps, nextProps);
+  }
+
   abstract render(): VDOMNode;
 
   get elements(): HTMLElement[] {
@@ -118,8 +122,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
 
     this.props = newProps;
 
-    const isContextUpdated = this.updateContext();
-    if (isEqual(oldProps, newProps) && !isContextUpdated) {
+    if (this.shouldComponentUpdate(oldProps, newProps)) {
       return;
     }
 
