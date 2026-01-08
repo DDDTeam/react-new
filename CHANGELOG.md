@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/DDDTeam/react-new/compare/v1.8.0...v1.9.0) (2026-01-08)
+
+
+### Features
+
+* optimize context api + add shouldComponentUpdate ([e03faad](https://github.com/DDDTeam/react-new/commit/e03faad5b0ec9e2f6a6615e0ec2d4b536b99a498))
+
 # [1.8.0](https://github.com/DDDTeam/react-new/compare/v1.7.2...v1.8.0) (2026-01-07)
 
 
