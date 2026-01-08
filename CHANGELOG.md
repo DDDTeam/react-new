@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/DDDTeam/react-new/compare/v1.9.0...v1.9.1) (2026-01-08)
+
+
+### Bug Fixes
+
+* shouldComponentUpdate ([55e7dff](https://github.com/DDDTeam/react-new/commit/55e7dff2962a25a51b90c7dcd3180e01d89f864d))
+
 # [1.9.0](https://github.com/DDDTeam/react-new/compare/v1.8.0...v1.9.0) (2026-01-08)
 
 
