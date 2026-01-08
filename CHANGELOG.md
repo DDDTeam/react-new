@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/DDDTeam/react-new/compare/v1.7.2...v1.8.0) (2026-01-07)
+
+
+### Features
+
+* defaultProps + refactor jsx ([2d38cfe](https://github.com/DDDTeam/react-new/commit/2d38cfea29d1436e6df3f711b5092b76d342b670))
+
 ## [1.7.2](https://github.com/DDDTeam/react-new/compare/v1.7.1...v1.7.2) (2026-01-06)
 
 
