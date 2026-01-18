@@ -115,9 +115,15 @@ function createComponentNode(
   const ComponentClass = vdom.tag;
   const {props} = extractPropsAndEvents(vdom);
   const component = new ComponentClass(props, hostComponent);
-  component.mount(parentEl, index);
-  vdom.component = component;
-  vdom.el = component.firstElement || null;
+  try {
+    component.mount(parentEl, index);
+    vdom.component = component;
+    vdom.el = component.firstElement || null;
+  } catch (e) {
+    if (component.vdom) {
+      (vdom as any).component = component;
+    }
+  }
 }
 
 function insert(el: Node, parentEl: HTMLElement, index: number | null): void {
