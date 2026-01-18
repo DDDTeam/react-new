@@ -13,7 +13,6 @@ export abstract class Component<P = {}, S = {}, C = null> {
   public vdom: VDOMNode | null = null;
   private hostEl: HTMLElement | null = null;
   public parent: Component | null = null;
-  private error: Error | null = null;
 
   static defaultProps: any = {}
   static getDerivedStateFromError?(error: Error): any;
@@ -85,7 +84,6 @@ export abstract class Component<P = {}, S = {}, C = null> {
 
   didCatch(error: Error, errorInfo: any): void | Promise<void> {
     console.error('Uncaught error:', error, errorInfo);
-    this.error = error;
     return Promise.resolve();
   }
 
@@ -198,7 +196,6 @@ export abstract class Component<P = {}, S = {}, C = null> {
     this.vdom = null;
     this.hostEl = null;
     this.isMounted = false;
-    this.error = null;
   }
 
   private patch(prevProps:P, prevState:S): void {
@@ -280,11 +277,13 @@ export abstract class Component<P = {}, S = {}, C = null> {
             errorBoundary.vdom = patchDOM(errorBoundary.vdom, vdom, errorBoundary.hostEl, errorBoundary);
 
             enqueueJob(() => {
-              errorBoundary.didCatch(error, {
+              const errorInfo = {
                 phase,
                 failedComponent: this.constructor.name,
                 componentStack: this.getComponentStack()
-              });
+              }
+              console.error("error", error, errorInfo)
+              errorBoundary.didCatch(error, errorInfo);
             });
           }
         } catch (renderError) {
@@ -349,9 +348,6 @@ export abstract class Component<P = {}, S = {}, C = null> {
   }
 
   public isErrorBoundary(): boolean {
-    console.log("isErrorBoundary");
-    console.log("this.constructor as typeof Component", this.constructor as typeof Component);
-    console.log("(this.constructor as typeof Component).getDerivedStateFromError", (this.constructor as typeof Component).getDerivedStateFromError);
     return (this.constructor as typeof Component).getDerivedStateFromError !== undefined;
   }
 }
