@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/DDDTeam/react-new/compare/v1.9.1...v1.10.0) (2026-01-18)
+
+
+### Features
+
+* add error handling ([40ecf17](https://github.com/DDDTeam/react-new/commit/40ecf1756c90cc3b1e106283ef088e2af999a090))
+
 ## [1.9.1](https://github.com/DDDTeam/react-new/compare/v1.9.0...v1.9.1) (2026-01-08)
 
 
