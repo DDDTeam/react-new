@@ -289,25 +289,21 @@ export abstract class Component<P = {}, S = {}, C = null> {
         try {
           const vdom = errorBoundary.render();
           if (vdom) {
-            // Если ErrorBoundary еще не имеет vdom (не был смонтирован),
-            // нужно использовать mountDOM вместо patchDOM
+            // Удаляем дублирующую проверку
             if (!errorBoundary.vdom) {
-              // ВАЖНО: Если ErrorBoundary еще не имеет vdom (не был смонтирован),
-              // устанавливаем флаг, что он сейчас в состоянии ошибки
-              errorBoundary.isMounted = true; // Помечаем как смонтированный
+              console.log("Mounting ErrorBoundary fallback (first time)");
 
-              if (!errorBoundary.vdom) {
-                console.log("Mounting ErrorBoundary fallback (first time)");
-                // Удаляем любые частично отрендеренные дети
-                while (errorBoundary.hostEl.firstChild) {
-                  errorBoundary.hostEl.removeChild(errorBoundary.hostEl.firstChild);
-                }
-
-                mountDOM(vdom, errorBoundary.hostEl, null, errorBoundary.parent);
-                errorBoundary.vdom = vdom;
+              // Очищаем hostEl
+              while (errorBoundary.hostEl.firstChild) {
+                errorBoundary.hostEl.removeChild(errorBoundary.hostEl.firstChild);
               }
 
-              // Теперь ErrorBoundary смонтирован, вызываем didMount
+              // Монтируем fallback
+              mountDOM(vdom, errorBoundary.hostEl, null, errorBoundary.parent);
+              errorBoundary.vdom = vdom;
+              errorBoundary.isMounted = true;
+
+              // Вызываем жизненные циклы
               enqueueJob(() => {
                 errorBoundary.didCatch(error, {
                   phase,
@@ -315,9 +311,11 @@ export abstract class Component<P = {}, S = {}, C = null> {
                   componentStack: this.getComponentStack()
                 });
 
-                errorBoundary.didMount()
+                errorBoundary.didMount();
               });
             }
+          } else {
+            console.error("ErrorBoundary.render() returned null or undefined!");
           }
         } catch (renderError) {
           console.error('Error during ErrorBoundary recovery:', renderError);
