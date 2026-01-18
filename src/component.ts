@@ -168,8 +168,8 @@ export abstract class Component<P = {}, S = {}, C = null> {
     try {
       this.vdom = this.render();
       this.hostEl = hostEl;
-      mountDOM(this.vdom, hostEl, index, this as Component);
       this.isMounted = true;
+      mountDOM(this.vdom, hostEl, index, this as Component);
     } catch (error) {
       this.handleError(error as Error, 'mount');
     }
