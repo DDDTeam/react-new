@@ -267,7 +267,9 @@ export abstract class Component<P = {}, S = {}, C = null> {
   }
 
   private handleError(error: Error, phase: 'mount' | 'patch'): void {
+    console.log("handleError")
     const errorBoundary = this.findClosestErrorBoundary();
+    console.log("errorBoundary", errorBoundary)
     if (errorBoundary) {
       if (errorBoundary.isMounted) {
         const Constructor = errorBoundary.constructor as typeof Component;
@@ -349,6 +351,9 @@ export abstract class Component<P = {}, S = {}, C = null> {
   }
 
   public isErrorBoundary(): boolean {
+    console.log("isErrorBoundary");
+    console.log("this.constructor as typeof Component", this.constructor as typeof Component);
+    console.log("(this.constructor as typeof Component).getDerivedStateFromError", (this.constructor as typeof Component).getDerivedStateFromError);
     return (this.constructor as typeof Component).getDerivedStateFromError !== undefined;
   }
 }
