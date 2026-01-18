@@ -283,6 +283,10 @@ export abstract class Component<P = {}, S = {}, C = null> {
         errorBoundary.state = { ...errorBoundary.state, ...newState };
       }
 
+      while (errorBoundary.hostEl.firstChild) {
+        errorBoundary.hostEl.removeChild(errorBoundary.hostEl.firstChild);
+      }
+
       // Рендерим fallback UI для ErrorBoundary
       if (errorBoundary.hostEl && errorBoundary.isMounted) {
         console.log("Rendering fallback UI");
