@@ -206,10 +206,6 @@ export abstract class Component<P = {}, S = {}, C = null> {
       return;
     }
 
-    if (this.error) {
-      return;
-    }
-
     enqueueJob(() => this.willUpdate(this.props, this.state));
 
     try {
