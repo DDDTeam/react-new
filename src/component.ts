@@ -13,8 +13,10 @@ export abstract class Component<P = {}, S = {}, C = null> {
   public vdom: VDOMNode | null = null;
   private hostEl: HTMLElement | null = null;
   public parent: Component | null = null;
+  private error: Error | null = null;
 
   static defaultProps: any = {}
+  static getDerivedStateFromError?(error: Error): any;
 
   public props: P & WithChildrenProps;
   public state: S = {} as S;
@@ -78,6 +80,12 @@ export abstract class Component<P = {}, S = {}, C = null> {
   }
 
   didUnmount(): void | Promise<void> {
+    return Promise.resolve();
+  }
+
+  didCatch(error: Error, errorInfo: any): void | Promise<void> {
+    console.error('Uncaught error:', error, errorInfo);
+    this.error = error;
     return Promise.resolve();
   }
 
@@ -157,10 +165,14 @@ export abstract class Component<P = {}, S = {}, C = null> {
     }
     this.updateContext();
 
-    this.vdom = this.render();
-    mountDOM(this.vdom, hostEl, index, this as Component);
-    this.hostEl = hostEl;
-    this.isMounted = true;
+    try {
+      this.vdom = this.render();
+      mountDOM(this.vdom, hostEl, index, this as Component);
+      this.hostEl = hostEl;
+      this.isMounted = true;
+    } catch (error) {
+      this.handleError(error as Error, 'mount');
+    }
   }
 
   unmount(): void {
@@ -186,6 +198,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
     this.vdom = null;
     this.hostEl = null;
     this.isMounted = false;
+    this.error = null;
   }
 
   private patch(prevProps:P, prevState:S): void {
@@ -193,10 +206,19 @@ export abstract class Component<P = {}, S = {}, C = null> {
       return;
     }
 
+    if (this.error) {
+      return;
+    }
+
     enqueueJob(() => this.willUpdate(this.props, this.state));
-    const vdom = this.render();
-    this.vdom = patchDOM(this.vdom, vdom, this.hostEl, this as Component);
-    enqueueJob(() => this.didUpdate(prevProps, prevState));
+
+    try {
+      const vdom = this.render();
+      this.vdom = patchDOM(this.vdom, vdom, this.hostEl, this as Component);
+      enqueueJob(() => this.didUpdate(prevProps, prevState));
+    } catch (error) {
+      this.handleError(error as Error, 'patch');
+    }
   }
 
   private updateContext() {
@@ -242,5 +264,44 @@ export abstract class Component<P = {}, S = {}, C = null> {
 
   getDefaultProps(): P {
     return (this.constructor as typeof Component).defaultProps || {}
+  }
+
+  private handleError(error: Error, phase: 'mount' | 'patch'): void {
+    const Constructor = this.constructor as typeof Component;
+
+    if (Constructor.getDerivedStateFromError) {
+      const newState = Constructor.getDerivedStateFromError(error);
+      this.state = { ...this.state, ...newState };
+    }
+
+    enqueueJob(() => {
+      this.didCatch(error, {
+        phase,
+        componentStack: this.getComponentStack()
+      });
+
+      if (this.hostEl && this.isMounted) {
+        try {
+          const vdom = this.render();
+          if (vdom) {
+            patchDOM(this.vdom!, vdom, this.hostEl!, this as Component);
+          }
+        } catch (renderError) {
+          console.error('Error during error recovery render:', renderError);
+        }
+      }
+    });
+  }
+
+  private getComponentStack(): string[] {
+    const stack: string[] = [this.constructor.name];
+    let current: Component | null = this.parent;
+
+    while (current) {
+      stack.push(current.constructor.name);
+      current = current.parent;
+    }
+
+    return stack.reverse();
   }
 }
