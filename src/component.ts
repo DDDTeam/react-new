@@ -283,17 +283,23 @@ export abstract class Component<P = {}, S = {}, C = null> {
         errorBoundary.state = { ...errorBoundary.state, ...newState };
       }
 
-      while (errorBoundary.hostEl.firstChild) {
-        errorBoundary.hostEl.removeChild(errorBoundary.hostEl.firstChild);
+      if (errorBoundary.hostEl) {
+        console.log("Cleaning up ErrorBoundary hostEl");
+        while (errorBoundary.hostEl.firstChild) {
+          console.log("errorBoundary.hostEl.firstChild", errorBoundary.hostEl.firstChild)
+          console.log("errorBoundary.hostEl.removeChild")
+          errorBoundary.hostEl.removeChild(errorBoundary.hostEl.firstChild);
+        }
       }
 
       // Рендерим fallback UI для ErrorBoundary
       if (errorBoundary.hostEl && errorBoundary.isMounted) {
-        console.log("Rendering fallback UI");
         try {
           const vdom = errorBoundary.render();
+          console.log('vdom', vdom)
           if (vdom) {
             errorBoundary.vdom = patchDOM(errorBoundary.vdom, vdom, errorBoundary.hostEl, errorBoundary);
+            console.log('errorBoundary.vdom', errorBoundary.vdom)
 
             enqueueJob(() => {
               errorBoundary.didCatch(error, {
