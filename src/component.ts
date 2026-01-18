@@ -267,39 +267,21 @@ export abstract class Component<P = {}, S = {}, C = null> {
   }
 
   private handleError(error: Error, phase: 'mount' | 'patch'): void {
-    console.log("handleError");
     const errorBoundary = this.findClosestErrorBoundary();
-    console.log("errorBoundary", errorBoundary);
 
     if (errorBoundary) {
-      console.log("Found error boundary");
-
       const Constructor = errorBoundary.constructor as typeof Component;
 
-      // Вызываем статический метод getDerivedStateFromError
       if (Constructor.getDerivedStateFromError) {
-        console.log("Calling getDerivedStateFromError");
         const newState = Constructor.getDerivedStateFromError(error);
         errorBoundary.state = { ...errorBoundary.state, ...newState };
       }
 
-      if (errorBoundary.hostEl) {
-        console.log("Cleaning up ErrorBoundary hostEl");
-        while (errorBoundary.hostEl.firstChild) {
-          console.log("errorBoundary.hostEl.firstChild", errorBoundary.hostEl.firstChild)
-          console.log("errorBoundary.hostEl.removeChild")
-          errorBoundary.hostEl.removeChild(errorBoundary.hostEl.firstChild);
-        }
-      }
-
-      // Рендерим fallback UI для ErrorBoundary
       if (errorBoundary.hostEl && errorBoundary.isMounted) {
         try {
           const vdom = errorBoundary.render();
-          console.log('vdom', vdom)
           if (vdom) {
             errorBoundary.vdom = patchDOM(errorBoundary.vdom, vdom, errorBoundary.hostEl, errorBoundary);
-            console.log('errorBoundary.vdom', errorBoundary.vdom)
 
             enqueueJob(() => {
               errorBoundary.didCatch(error, {
@@ -310,7 +292,6 @@ export abstract class Component<P = {}, S = {}, C = null> {
             });
           }
         } catch (renderError) {
-          console.error('Error during ErrorBoundary recovery:', renderError);
           if (errorBoundary.parent) {
             errorBoundary.parent.handleError(renderError as Error, phase);
           }
@@ -319,8 +300,6 @@ export abstract class Component<P = {}, S = {}, C = null> {
 
       return;
     }
-
-    console.log("No error boundary found, handling locally");
 
     const Constructor = this.constructor as typeof Component;
 

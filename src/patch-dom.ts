@@ -1,5 +1,6 @@
 import {removeAttribute, removeStyle, setAttribute, setStyle} from './attributes';
 import {destroyDOM} from './destroy-dom';
+import type {EventListeners} from './events';
 import {addEventListener} from './events';
 import {extractChildren} from './h';
 import {mountDOM} from './mount-dom';
@@ -10,7 +11,6 @@ import {extractPropsAndEvents} from './utils/props';
 import {isNotBlankOrEmptyString} from './utils/strings';
 
 import type {Component} from './component';
-import type {EventListeners} from './events';
 import type {
   ArrayDiffOperation,
   ComponentVDOMNode,
@@ -189,25 +189,26 @@ function patchEvents(
   hostComponent: Component | null = null,
 ): EventListeners {
   const {removed, added, updated} = objectsDiff(oldEvents, newEvents);
+  const listeners = { ...oldListeners }
 
   for (const eventName of removed.concat(updated)) {
     const handler = oldListeners?.[eventName];
     if (handler) {
       el.removeEventListener(eventName, handler as EventListener);
+      delete listeners[eventName]
     }
   }
 
-  const addedListeners: EventListeners = {};
   for (const eventName of added.concat(updated)) {
-    addedListeners[eventName] = addEventListener(
-      eventName,
-      newEvents[eventName] as any,
-      el,
-      hostComponent,
-    );
+    listeners[eventName] = addEventListener(
+        eventName,
+        newEvents[eventName] as any,
+        el,
+        hostComponent,
+    )
   }
 
-  return addedListeners;
+  return listeners;
 }
 
 function patchChildren(oldVdom: VDOMNode, newVdom: VDOMNode, hostComponent: Component | null) {
