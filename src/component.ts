@@ -267,6 +267,35 @@ export abstract class Component<P = {}, S = {}, C = null> {
   }
 
   private handleError(error: Error, phase: 'mount' | 'patch'): void {
+    const errorBoundary = this.findClosestErrorBoundary();
+    if (errorBoundary) {
+      if (errorBoundary.isMounted) {
+        const Constructor = errorBoundary.constructor as typeof Component;
+
+        if (Constructor.getDerivedStateFromError) {
+          const newState = Constructor.getDerivedStateFromError(error);
+          errorBoundary.state = { ...errorBoundary.state, ...newState };
+        }
+
+        errorBoundary.didCatch(error, {
+          phase,
+          failedComponent: this.constructor.name,
+          componentStack: this.getComponentStack()
+        });
+
+        if (errorBoundary.hostEl && errorBoundary.vdom) {
+          try {
+            const vdom = errorBoundary.render();
+            if (vdom) {
+              return;
+            }
+          } catch (renderError) {
+            console.error('Error during ErrorBoundary recovery:', renderError);
+          }
+        }
+      }
+    }
+
     const Constructor = this.constructor as typeof Component;
 
     if (Constructor.getDerivedStateFromError) {
@@ -303,5 +332,22 @@ export abstract class Component<P = {}, S = {}, C = null> {
     }
 
     return stack.reverse();
+  }
+
+  private findClosestErrorBoundary():Component | null {
+    let current: Component | null = this.parent;
+
+    while (current) {
+      if (current.isErrorBoundary()) {
+        return current;
+      }
+      current = current.parent;
+    }
+
+    return null;
+  }
+
+  public isErrorBoundary(): boolean {
+    return (this.constructor as typeof Component).getDerivedStateFromError !== undefined;
   }
 }
