@@ -168,8 +168,8 @@ export abstract class Component<P = {}, S = {}, C = null> {
     try {
       this.vdom = this.render();
       this.hostEl = hostEl;
-      this.isMounted = true;
       mountDOM(this.vdom, hostEl, index, this as Component);
+      this.isMounted = true;
     } catch (error) {
       this.handleError(error as Error, 'mount');
     }
@@ -286,24 +286,24 @@ export abstract class Component<P = {}, S = {}, C = null> {
       // Рендерим fallback UI для ErrorBoundary
       if (errorBoundary.hostEl) {
         console.log("Rendering fallback UI");
+        console.log(1)
         try {
+          console.log(2)
           const vdom = errorBoundary.render();
           if (vdom) {
-            // Удаляем дублирующую проверку
+            console.log(3)
             if (!errorBoundary.vdom) {
+              console.log(4)
               console.log("Mounting ErrorBoundary fallback (first time)");
 
-              // Очищаем hostEl
               while (errorBoundary.hostEl.firstChild) {
                 errorBoundary.hostEl.removeChild(errorBoundary.hostEl.firstChild);
               }
 
-              // Монтируем fallback
               mountDOM(vdom, errorBoundary.hostEl, null, errorBoundary.parent);
               errorBoundary.vdom = vdom;
               errorBoundary.isMounted = true;
 
-              // Вызываем жизненные циклы
               enqueueJob(() => {
                 errorBoundary.didCatch(error, {
                   phase,
@@ -319,20 +319,17 @@ export abstract class Component<P = {}, S = {}, C = null> {
           }
         } catch (renderError) {
           console.error('Error during ErrorBoundary recovery:', renderError);
-          // Если сам ErrorBoundary падает при рендеринге,
-          // нужно пробросить ошибку выше по цепочке
           if (errorBoundary.parent) {
             errorBoundary.parent.handleError(renderError as Error, phase);
           }
         }
       }
 
-      return; // Ошибка обработана ErrorBoundary
+      return;
     }
 
     console.log("No error boundary found, handling locally");
 
-    // Если ErrorBoundary не найден, обрабатываем ошибку локально
     const Constructor = this.constructor as typeof Component;
 
     if (Constructor.getDerivedStateFromError) {
