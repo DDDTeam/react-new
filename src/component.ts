@@ -167,8 +167,8 @@ export abstract class Component<P = {}, S = {}, C = null> {
 
     try {
       this.vdom = this.render();
-      mountDOM(this.vdom, hostEl, index, this as Component);
       this.hostEl = hostEl;
+      mountDOM(this.vdom, hostEl, index, this as Component);
       this.isMounted = true;
     } catch (error) {
       this.handleError(error as Error, 'mount');
@@ -267,47 +267,78 @@ export abstract class Component<P = {}, S = {}, C = null> {
   }
 
   private handleError(error: Error, phase: 'mount' | 'patch'): void {
-    console.log("handleError")
+    console.log("handleError");
     const errorBoundary = this.findClosestErrorBoundary();
-    console.log("errorBoundary", errorBoundary)
-    console.log(1)
+    console.log("errorBoundary", errorBoundary);
+
     if (errorBoundary) {
-      console.log(2)
-      if (errorBoundary.isMounted) {
-        console.log(3)
-        const Constructor = errorBoundary.constructor as typeof Component;
+      console.log("Found error boundary");
 
-        if (Constructor.getDerivedStateFromError) {
-          console.log(4)
-          const newState = Constructor.getDerivedStateFromError(error);
-          errorBoundary.state = { ...errorBoundary.state, ...newState };
-        }
+      const Constructor = errorBoundary.constructor as typeof Component;
 
+      // Вызываем статический метод getDerivedStateFromError
+      if (Constructor.getDerivedStateFromError) {
+        console.log("Calling getDerivedStateFromError");
+        const newState = Constructor.getDerivedStateFromError(error);
+        errorBoundary.state = { ...errorBoundary.state, ...newState };
+      }
+
+      // Вызываем componentDidCatch, но только если компонент уже был смонтирован
+      // или мы находимся в фазе обновления
+      if (phase === 'patch' || errorBoundary.isMounted) {
+        console.log("Calling componentDidCatch");
         errorBoundary.didCatch(error, {
           phase,
           failedComponent: this.constructor.name,
           componentStack: this.getComponentStack()
         });
+      }
 
-        if (errorBoundary.hostEl && errorBoundary.vdom) {
-          console.log(5)
-          try {
-            console.log(6)
-            const vdom = errorBoundary.render();
-            if (vdom) {
-              console.log(7)
-              patchDOM(errorBoundary.vdom!, vdom, errorBoundary.hostEl!, errorBoundary as Component);
+      // Рендерим fallback UI для ErrorBoundary
+      if (errorBoundary.hostEl) {
+        console.log("Rendering fallback UI");
+        try {
+          const vdom = errorBoundary.render();
+          if (vdom) {
+            // Если ErrorBoundary еще не имеет vdom (не был смонтирован),
+            // нужно использовать mountDOM вместо patchDOM
+            if (!errorBoundary.vdom) {
+              console.log("Mounting ErrorBoundary fallback");
+              // Нужно очистить то, что уже было отмонтировано
+              const index = errorBoundary.parent?.offset || 0;
+
+              // Очищаем хост элемент
+              if (errorBoundary.hostEl && errorBoundary.hostEl.children.length > 0) {
+                // Удаляем частично отрендеренные дети
+                Array.from(errorBoundary.hostEl.children).forEach(child => {
+                  child.remove();
+                });
+              }
+
+              mountDOM(vdom, errorBoundary.hostEl, index, errorBoundary.parent);
+              errorBoundary.vdom = vdom;
+              errorBoundary.isMounted = true;
+            } else {
+              console.log("Patching ErrorBoundary");
+              patchDOM(errorBoundary.vdom, vdom, errorBoundary.hostEl, errorBoundary);
             }
-          } catch (renderError) {
-            console.log(8)
-            console.error('Error during ErrorBoundary recovery:', renderError);
+          }
+        } catch (renderError) {
+          console.error('Error during ErrorBoundary recovery:', renderError);
+          // Если сам ErrorBoundary падает при рендеринге,
+          // нужно пробросить ошибку выше по цепочке
+          if (errorBoundary.parent) {
+            errorBoundary.parent.handleError(renderError as Error, phase);
           }
         }
       }
-      return;
+
+      return; // Ошибка обработана ErrorBoundary
     }
 
-    console.log(9)
+    console.log("No error boundary found, handling locally");
+
+    // Если ErrorBoundary не найден, обрабатываем ошибку локально
     const Constructor = this.constructor as typeof Component;
 
     if (Constructor.getDerivedStateFromError) {
