@@ -287,6 +287,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
           try {
             const vdom = errorBoundary.render();
             if (vdom) {
+              patchDOM(errorBoundary.vdom!, vdom, errorBoundary.hostEl!, errorBoundary as Component);
               return;
             }
           } catch (renderError) {
