@@ -168,8 +168,8 @@ export abstract class Component<P = {}, S = {}, C = null> {
     try {
       this.vdom = this.render();
       this.hostEl = hostEl;
-      mountDOM(this.vdom, hostEl, index, this as Component);
       this.isMounted = true;
+      mountDOM(this.vdom, hostEl, index, this as Component);
     } catch (error) {
       this.handleError(error as Error, 'mount');
     }
@@ -276,6 +276,9 @@ export abstract class Component<P = {}, S = {}, C = null> {
 
       const Constructor = errorBoundary.constructor as typeof Component;
 
+      // Сохраняем предыдущее состояние для didUpdate
+      const prevState = { ...errorBoundary.state };
+
       // Вызываем статический метод getDerivedStateFromError
       if (Constructor.getDerivedStateFromError) {
         console.log("Calling getDerivedStateFromError");
@@ -286,16 +289,15 @@ export abstract class Component<P = {}, S = {}, C = null> {
       // Рендерим fallback UI для ErrorBoundary
       if (errorBoundary.hostEl) {
         console.log("Rendering fallback UI");
-        console.log(1)
         try {
-          console.log(2)
           const vdom = errorBoundary.render();
           if (vdom) {
-            console.log(3)
+
+            // Очищаем hostEl только если ErrorBoundary еще не монтирован
             if (!errorBoundary.vdom) {
-              console.log(4)
               console.log("Mounting ErrorBoundary fallback (first time)");
 
+              // Очищаем любые частично отрендеренные дети
               while (errorBoundary.hostEl.firstChild) {
                 errorBoundary.hostEl.removeChild(errorBoundary.hostEl.firstChild);
               }
@@ -313,9 +315,24 @@ export abstract class Component<P = {}, S = {}, C = null> {
 
                 errorBoundary.didMount();
               });
+            } else {
+              console.log("ErrorBoundary already mounted, patching");
+
+              // Используем patchDOM для обновления
+              const prevVDOM = errorBoundary.vdom;
+              errorBoundary.vdom = patchDOM(prevVDOM, vdom, errorBoundary.hostEl, errorBoundary);
+
+              enqueueJob(() => {
+                errorBoundary.didCatch(error, {
+                  phase,
+                  failedComponent: this.constructor.name,
+                  componentStack: this.getComponentStack()
+                });
+
+                // Вызываем didUpdate
+                errorBoundary.didUpdate(errorBoundary.props, prevState);
+              });
             }
-          } else {
-            console.error("ErrorBoundary.render() returned null or undefined!");
           }
         } catch (renderError) {
           console.error('Error during ErrorBoundary recovery:', renderError);
