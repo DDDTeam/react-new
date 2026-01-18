@@ -1,3 +1,10 @@
+## [1.10.2](https://github.com/DDDTeam/react-new/compare/v1.10.1...v1.10.2) (2026-01-18)
+
+
+### Bug Fixes
+
+* error boundary ([a22e31a](https://github.com/DDDTeam/react-new/commit/a22e31aeaedfaaa1a60a90351bd3698809fcb79d))
+
 ## [1.10.1](https://github.com/DDDTeam/react-new/compare/v1.10.0...v1.10.1) (2026-01-18)
 
 
