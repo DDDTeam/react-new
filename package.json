@@ -1,6 +1,6 @@
 {
   "name": "ddd-react",
-  "version": "1.10.12",
+  "version": "1.10.13",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "type-check": "tsc --noEmit",
