@@ -270,11 +270,15 @@ export abstract class Component<P = {}, S = {}, C = null> {
     console.log("handleError")
     const errorBoundary = this.findClosestErrorBoundary();
     console.log("errorBoundary", errorBoundary)
+    console.log(1)
     if (errorBoundary) {
+      console.log(2)
       if (errorBoundary.isMounted) {
+        console.log(3)
         const Constructor = errorBoundary.constructor as typeof Component;
 
         if (Constructor.getDerivedStateFromError) {
+          console.log(4)
           const newState = Constructor.getDerivedStateFromError(error);
           errorBoundary.state = { ...errorBoundary.state, ...newState };
         }
@@ -286,19 +290,24 @@ export abstract class Component<P = {}, S = {}, C = null> {
         });
 
         if (errorBoundary.hostEl && errorBoundary.vdom) {
+          console.log(5)
           try {
+            console.log(6)
             const vdom = errorBoundary.render();
             if (vdom) {
+              console.log(7)
               patchDOM(errorBoundary.vdom!, vdom, errorBoundary.hostEl!, errorBoundary as Component);
-              return;
             }
           } catch (renderError) {
+            console.log(8)
             console.error('Error during ErrorBoundary recovery:', renderError);
           }
         }
       }
+      return;
     }
 
+    console.log(9)
     const Constructor = this.constructor as typeof Component;
 
     if (Constructor.getDerivedStateFromError) {
