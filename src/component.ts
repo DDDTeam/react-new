@@ -283,17 +283,6 @@ export abstract class Component<P = {}, S = {}, C = null> {
         errorBoundary.state = { ...errorBoundary.state, ...newState };
       }
 
-      // Вызываем componentDidCatch, но только если компонент уже был смонтирован
-      // или мы находимся в фазе обновления
-      if (phase === 'patch' || errorBoundary.isMounted) {
-        console.log("Calling componentDidCatch");
-        errorBoundary.didCatch(error, {
-          phase,
-          failedComponent: this.constructor.name,
-          componentStack: this.getComponentStack()
-        });
-      }
-
       // Рендерим fallback UI для ErrorBoundary
       if (errorBoundary.hostEl) {
         console.log("Rendering fallback UI");
@@ -303,24 +292,31 @@ export abstract class Component<P = {}, S = {}, C = null> {
             // Если ErrorBoundary еще не имеет vdom (не был смонтирован),
             // нужно использовать mountDOM вместо patchDOM
             if (!errorBoundary.vdom) {
-              console.log("Mounting ErrorBoundary fallback");
-              // Нужно очистить то, что уже было отмонтировано
-              const index = errorBoundary.parent?.offset || 0;
+              // ВАЖНО: Если ErrorBoundary еще не имеет vdom (не был смонтирован),
+              // устанавливаем флаг, что он сейчас в состоянии ошибки
+              errorBoundary.isMounted = true; // Помечаем как смонтированный
 
-              // Очищаем хост элемент
-              if (errorBoundary.hostEl && errorBoundary.hostEl.children.length > 0) {
-                // Удаляем частично отрендеренные дети
-                Array.from(errorBoundary.hostEl.children).forEach(child => {
-                  child.remove();
-                });
+              if (!errorBoundary.vdom) {
+                console.log("Mounting ErrorBoundary fallback (first time)");
+                // Удаляем любые частично отрендеренные дети
+                while (errorBoundary.hostEl.firstChild) {
+                  errorBoundary.hostEl.removeChild(errorBoundary.hostEl.firstChild);
+                }
+
+                mountDOM(vdom, errorBoundary.hostEl, null, errorBoundary.parent);
+                errorBoundary.vdom = vdom;
               }
 
-              mountDOM(vdom, errorBoundary.hostEl, index, errorBoundary.parent);
-              errorBoundary.vdom = vdom;
-              errorBoundary.isMounted = true;
-            } else {
-              console.log("Patching ErrorBoundary");
-              patchDOM(errorBoundary.vdom, vdom, errorBoundary.hostEl, errorBoundary);
+              // Теперь ErrorBoundary смонтирован, вызываем didMount
+              enqueueJob(() => {
+                errorBoundary.didCatch(error, {
+                  phase,
+                  failedComponent: this.constructor.name,
+                  componentStack: this.getComponentStack()
+                });
+
+                errorBoundary.didMount()
+              });
             }
           }
         } catch (renderError) {
