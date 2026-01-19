@@ -10,20 +10,14 @@ jobs:
       - name: Checkout Commit
         uses: actions/checkout@v5
 
-      - name: Cache npm dependencies
-        id: cache-ci
-        uses: actions/cache@v4
+      - name: Install Node.js
+        uses: actions/setup-node@master
         with:
-          path: |
-            node_modules
-            ~/.npm
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-
+          node-version: 24
+          cache: 'yarn'
 
-      - name: Install Dependencies
-        if: steps.cache-ci.outputs.cache-hit != 'true'
-        run: npm ci
+      - name: Install project dependencies
+        run: yarn --frozen-lockfile
 
   eslint-check:
     name: Eslint check
@@ -31,17 +25,19 @@ jobs:
     needs: install-cache
     steps:
       - uses: actions/checkout@v5
-      - name: Restore npm cache
-        uses: actions/cache@v4
-        id: cache-ci
+
+      - name: Install Node.js
+        uses: actions/setup-node@master
         with:
-          path: |
-            node_modules
-            ~/.npm
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          node-version: 24
+          cache: 'yarn'
+
+      - name: Install project dependencies
+        run: yarn --frozen-lockfile
+
       - name: Run ESLint
-        run: |
-          npm run lint
+        run: npm run lint
+
       - name: Send Telegram Failure Message
         if: failure()
         uses: PacificPromise/macos-telegram-action@main
@@ -59,16 +55,19 @@ jobs:
     needs: eslint-check
     steps:
       - uses: actions/checkout@v5
-      - name: Restore npm cache
-        uses: actions/cache@v4
-        id: cache-ci
+
+      - name: Install Node.js
+        uses: actions/setup-node@master
         with:
-          path: |
-            node_modules
-            ~/.npm
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          node-version: 24
+          cache: 'yarn'
+
+      - name: Install project dependencies
+        run: yarn --frozen-lockfile
+
       - name: Run build
         run: npm run build
+
       - name: Send Telegram Failure Message
         if: failure()
         uses: PacificPromise/macos-telegram-action@main

@@ -272,10 +272,10 @@ ddd-react-types@^1.0.0:
   resolved "https://verdaccio.devmail.ru/ddd-react-types/-/ddd-react-types-1.0.0.tgz#f3d7c513e71daf139854b2f5e75223a146569fbd"
   integrity sha512-2qtxe2v0gTIJgF2NCYSIfYUOUvm1C3V/fsXaurrrjfl0GjQG7VQwIwJajf7Ma3nYcNB9PRKwlqtO16q7gtRVsg==
 
-ddd-react@^1.11.0:
-  version "1.11.0"
-  resolved "https://verdaccio.devmail.ru/ddd-react/-/ddd-react-1.11.0.tgz#8dbd048652de2527f1bdc33ebebce2c9c781ae59"
-  integrity sha512-rSpNkUjKkb+IrNNPE+hnDh1Qk6FfgQBd6g3r1PTBW9dReGca/NsdL32tpwsE93PElAwfrl6+6tiEIqeBaU2kWg==
+ddd-react@1.12.0:
+  version "1.12.0"
+  resolved "https://verdaccio.devmail.ru/ddd-react/-/ddd-react-1.12.0.tgz#077625bca35d9592871df976d61f1a6a1468e5a2"
+  integrity sha512-x/raTC53H9jWqbRB7+A3GANNXA+RyzAmeYa8z9fbxceaSploX2WK8JUUG8zevC+MzzOyzMrrVQ6UJhm5v2WGFw==
   dependencies:
     "@guanghechen/fast-deep-equal" "^2.3.7"
 
