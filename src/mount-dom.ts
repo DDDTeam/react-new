@@ -19,6 +19,15 @@ export function mountDOM(
   index: number | null = null,
   hostComponent: Component | null = null,
 ): void {
+	if (!vdom) {
+		return;
+	}
+
+	if (Array.isArray(vdom)) {
+		vdom.map(v => mountDOM(v, parentEl, index, hostComponent));
+		return
+	}
+
   switch (vdom.type) {
     case DOM_TYPES.TEXT: {
       createTextNode(vdom as TextVDOMNode, parentEl, index);

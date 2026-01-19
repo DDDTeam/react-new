@@ -37,7 +37,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
   addDependency({consumer}: {consumer: Consumer<C>}) {
     if (!this.dependencies.some(d => d.consumer === consumer)) {
       this.dependencies.push({consumer});
-      consumer.subscribedProvider = this as Provider<C>;
+      consumer.subscribedProvider = this as unknown as Provider<C>;
     }
   }
 
@@ -66,11 +66,11 @@ export abstract class Component<P = {}, S = {}, C = null> {
     return Promise.resolve();
   }
 
-  willUpdate(nextProps:P, nextState:S): void | Promise<void> {
+  willUpdate(_nextProps:P, _nextState:S): void | Promise<void> {
     return Promise.resolve();
   }
 
-  didUpdate(prevProps:P, prevState:S): void | Promise<void> {
+  didUpdate(_prevProps:P, _prevState:S): void | Promise<void> {
     return Promise.resolve();
   }
 
@@ -91,7 +91,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
     return isEqual(prevProps, nextProps);
   }
 
-  abstract render(): VDOMNode;
+  abstract render(): VDOMNode[] | VDOMNode | Function | null | undefined;
 
   get elements(): HTMLElement[] {
     if (this.vdom == null) {
@@ -164,7 +164,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
     this.updateContext();
 
     try {
-      this.vdom = this.render();
+      this.vdom = this.render() as VDOMNode;
       this.hostEl = hostEl;
       this.isMounted = true;
       mountDOM(this.vdom, hostEl, index, this as Component);
@@ -206,7 +206,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
     enqueueJob(() => this.willUpdate(this.props, this.state));
 
     try {
-      const vdom = this.render();
+      const vdom = this.render() as VDOMNode;
       this.vdom = patchDOM(this.vdom, vdom, this.hostEl, this as Component);
       enqueueJob(() => this.didUpdate(prevProps, prevState));
     } catch (error) {
@@ -272,9 +272,9 @@ export abstract class Component<P = {}, S = {}, C = null> {
 
       if (errorBoundary.hostEl && errorBoundary.isMounted) {
         try {
-          const vdom = errorBoundary.render();
+          const vdom = errorBoundary.render() as VDOMNode;
           if (vdom) {
-            errorBoundary.vdom = patchDOM(errorBoundary.vdom, vdom, errorBoundary.hostEl, errorBoundary);
+            errorBoundary.vdom = patchDOM(errorBoundary.vdom as VDOMNode, vdom, errorBoundary.hostEl, errorBoundary);
 
             enqueueJob(() => {
               const errorInfo = {
@@ -311,7 +311,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
 
       if (this.hostEl && this.isMounted) {
         try {
-          const vdom = this.render();
+          const vdom = this.render() as VDOMNode;
           if (vdom) {
             patchDOM(this.vdom!, vdom, this.hostEl!, this as Component);
           }
