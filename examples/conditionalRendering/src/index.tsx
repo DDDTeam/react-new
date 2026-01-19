@@ -25,9 +25,7 @@ class App1 extends Component {
         return (
             <div>
                 <Test>
-                    <span>333</span>
-                    <br />
-                    <span>444</span>
+                    333
                 </Test>
                 <h3>asdf</h3>
             </div>
