@@ -1,3 +1,15 @@
+# [1.12.0](https://github.com/DDDTeam/react-new/compare/v1.11.0...v1.12.0) (2026-01-19)
+
+
+### Bug Fixes
+
+* add string to render ([24985fd](https://github.com/DDDTeam/react-new/commit/24985fd215036fd37ce29ffd216c9db6cbb2d683))
+
+
+### Features
+
+* update react version in examples ([a0be77d](https://github.com/DDDTeam/react-new/commit/a0be77d096794998596119fcf62b7a8ac0eb43b2))
+
 # [1.11.0](https://github.com/DDDTeam/react-new/compare/v1.10.16...v1.11.0) (2026-01-19)
 
 
