@@ -1,6 +1,6 @@
 import { isEqual } from '@guanghechen/fast-deep-equal';
 import { destroyDOM } from './destroy-dom';
-import { extractChildren, h, hFragment } from './h';
+import {extractChildren, h, hFragment, hString} from './h';
 import { mountDOM } from './mount-dom';
 import { patchDOM } from './patch-dom';
 import { enqueueJob } from './scheduler';
@@ -99,7 +99,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
 		return isEqual(prevProps, nextProps);
 	}
 
-	abstract render(): VDOMNode[] | VDOMNode | Function | null | undefined;
+	abstract render(): VDOMNode | VDOMNode[] | Function | string | null | undefined;
 
 	get elements(): HTMLElement[] {
 		if (this.vdom == null) {
@@ -392,7 +392,7 @@ export abstract class Component<P = {}, S = {}, C = null> {
 	}
 
 	private normalizeRenderResult(
-		renderResult: VDOMNode[] | VDOMNode | Function | null | undefined,
+		renderResult: VDOMNode  | VDOMNode[] | Function | string | null | undefined,
 	): VDOMNode | null {
 		if (renderResult == null) {
 			return null;
@@ -404,6 +404,10 @@ export abstract class Component<P = {}, S = {}, C = null> {
 
 		if (typeof renderResult === 'function') {
 			return h(renderResult as any, {});
+		}
+
+		if (typeof renderResult === 'string') {
+			return hString(renderResult as any);
 		}
 
 		return renderResult;

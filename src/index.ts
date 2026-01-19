@@ -4,7 +4,7 @@ import {h, hFragment, hString} from './h';
 import {render} from './render';
 import {createRef} from './ref';
 import type {Ref} from './ref';
-import type {ComponentType} from './types/types';
+import type {ComponentType} from './types';
 import {createPortal} from './portal';
 
 export type {ComponentType, Ref};
