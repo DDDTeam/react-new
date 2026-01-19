@@ -4,9 +4,7 @@ permissions:
   contents: write
   packages: write
 
-on:
-  push:
-    branches: [ main ]
+on: workflow_dispatch
 
 jobs:
   release:
