@@ -1,3 +1,11 @@
+# [1.11.0](https://github.com/DDDTeam/react-new/compare/v1.10.16...v1.11.0) (2026-01-19)
+
+
+### Features
+
+* refactor return this.props.children & return null ([5d5a013](https://github.com/DDDTeam/react-new/commit/5d5a0132e7a91483a98af77446680f4e6f407b20))
+* update & add examples ([62e5d0d](https://github.com/DDDTeam/react-new/commit/62e5d0d13cf0f5c668a044ca4145c3a2d4ceaeae))
+
 ## [1.10.16](https://github.com/DDDTeam/react-new/compare/v1.10.15...v1.10.16) (2026-01-18)
 
 
