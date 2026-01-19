@@ -51,7 +51,7 @@ export interface Context<T> {
 }
 
 export interface WithChildrenProps {
-  children?: VDOMNode[] | VDOMNode | Function;
+  children?: VDOMNode | VDOMNode[] | Function | string;
 }
 
 export type ComponentType<Props = any, ComponentState = any, Context = any> = new (
