@@ -6,7 +6,8 @@ import tseslint from 'typescript-eslint';
 const Ignores = [
 	'node_modules/',
 	'dist/**',
-	'vite.config.ts'
+	'vite.config.ts',
+	'examples/**'
 ];
 
 export default defineConfig([
