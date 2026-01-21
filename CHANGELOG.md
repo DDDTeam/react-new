@@ -1,3 +1,24 @@
+# [1.13.0](https://github.com/DDDTeam/react-new/compare/v1.12.0...v1.13.0) (2026-01-21)
+
+
+### Bug Fixes
+
+* eslint ([b827563](https://github.com/DDDTeam/react-new/commit/b827563aa51d3f87a4f8500462482ba0bdccf14a))
+* types ([04debb7](https://github.com/DDDTeam/react-new/commit/04debb7da6b169533e248a5490d71df0323dc65e))
+* types ([7341d16](https://github.com/DDDTeam/react-new/commit/7341d1612a3295a4f1ef10f103a627da3dfeac72))
+* types ([aeed2f8](https://github.com/DDDTeam/react-new/commit/aeed2f88939c4bb10f299630430e2ca7a9aec524))
+* types ([9a28bfd](https://github.com/DDDTeam/react-new/commit/9a28bfdae742ccfb3cacf9140b478fab33e242d2))
+* update ([efd077c](https://github.com/DDDTeam/react-new/commit/efd077cc6d45fa27c6943a73012bf151474b8e68))
+* update ([9a7b0f6](https://github.com/DDDTeam/react-new/commit/9a7b0f63c735ed53914fcabbfd0e06b2cfc3734f))
+* update ([6830715](https://github.com/DDDTeam/react-new/commit/68307150c43f4a399e55385cf91bcfbd783ebf2e))
+* update ([2943c0f](https://github.com/DDDTeam/react-new/commit/2943c0f37a457ad6eb548f45614fae0906fc8589))
+
+
+### Features
+
+* refactor ([8f92bee](https://github.com/DDDTeam/react-new/commit/8f92bee8e708658beeb6fec3467f9690ec2bfcbe))
+* yarn ([67cb57d](https://github.com/DDDTeam/react-new/commit/67cb57d12d01e94ca124060ac607636b78573018))
+
 # [1.12.0](https://github.com/DDDTeam/react-new/compare/v1.11.0...v1.12.0) (2026-01-19)
 
 
